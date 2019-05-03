@@ -233,7 +233,7 @@
                             app:sv_minSpeed="0"
                             app:sv_speedTextFormat="FLOAT"
                             app:sv_speedTextSize="15dp"
-                            app:sv_speedTextPosition="CENTER"
+                            app:sv_speedTextPosition="LEFT"
                             app:sv_speedometerMode="NORMAL"
                             app:sv_startDegree="180"
                             app:sv_textColor="#1A237E"

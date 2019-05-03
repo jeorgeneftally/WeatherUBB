@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,13 +32,16 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
 
     long moveDuration=1000;
-    Button promedio;
     Date date =new Date();
     String fecha=new SimpleDateFormat("dd/MM/yyyy").format(new Date()).replace("/","").trim();
     ArrayList<String> t= new ArrayList<String>();
     ArrayList<String> h=new ArrayList<String>();
     ArrayList<String> r=new ArrayList<String>();
     private RequestQueue requestQueue;
+
+    int c1=0;
+    int c2=0;
+    int c3=0;
 
 
     @Override
@@ -53,9 +57,7 @@ public class MainActivity extends AppCompatActivity {
         humedad.setUnit("%RH");
         radiacion.setUnit("nm");
 
-        temperatura.speedTo(10);
-        humedad.speedTo(20);
-        radiacion.speedTo(30);
+
 
         temperatura.setLowSpeedColor(0xFF82CA2C);
         radiacion.setLowSpeedColor(0xFF82CA2C);
@@ -68,16 +70,24 @@ public class MainActivity extends AppCompatActivity {
         Button actualizar=findViewById(R.id.button1);
         Button promBut= findViewById(R.id.button2);
 
+        temperatura.speedTo(0,0);
+        humedad.speedTo(0,0);
+        radiacion.speedTo(0,0);
+
+        ObtenerTemperatura();
+        ObtenerHumedad();
+        ObtenerRadiacion();
 
         actualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ObtenerTemperatura();
-                ObtenerHumedad();
-                ObtenerRadiacion();
-                temperatura.speedTo(valor_actual(t),moveDuration);
-                humedad.speedTo(valor_actual(h),moveDuration);
-                radiacion.speedTo(valor_actual(r),moveDuration);
+                    temperatura.speedTo(0,0);
+                    humedad.speedTo(0,0);
+                    radiacion.speedTo(0,0);
+                    temperatura.speedTo(valor_actual(t), moveDuration);
+                    humedad.speedTo(valor_actual(h), moveDuration);
+                    radiacion.speedTo(valor_actual(r), moveDuration);
+
             }
         });
 
@@ -101,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+
                         try {
                             JSONArray jsonArray = response.getJSONArray("data");
                             for (int i = 0; i < jsonArray.length(); i++) {
@@ -123,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         ); requestQueue.add(request);
+        c1++;
     }
 
     private void ObtenerHumedad() {
@@ -153,10 +165,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         ); requestQueue.add(request);
+        c2++;
     }
 
     private void ObtenerTemperatura() {
-
+        //Toast.makeText(getApplicationContext(), "estoy en el método T°", Toast.LENGTH_SHORT).show();
         String T_url="http://arrau.chillan.ubiobio.cl:8075/ubbiot/web/mediciones/medicionespordia/3lg0M7rq2E/E1yGxKAcrg/"+fecha;
         Log.d("LOG", T_url);
         StringRequest request= new StringRequest(Request.Method.GET, T_url,
@@ -171,14 +184,10 @@ public class MainActivity extends AppCompatActivity {
                                 JSONObject jsonObject = res.getJSONArray("data").getJSONObject(i);
                                 String valor = jsonObject.getString("valor");
                                 t.add(valor);
-
                             }
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -188,11 +197,12 @@ public class MainActivity extends AppCompatActivity {
         }
         );
         requestQueue.add(request);
-
+        c3++;
     }
 
 
     public float valor_actual(ArrayList<String> lista){
+        //Toast.makeText(getApplicationContext(), "estoy en el método valor actual", Toast.LENGTH_SHORT).show();
         Log.d("LOG", lista.toString());
         float actual=0;
         if(lista.size() > 0){
