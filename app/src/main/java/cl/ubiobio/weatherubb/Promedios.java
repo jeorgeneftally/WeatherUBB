@@ -73,6 +73,7 @@ public class Promedios extends AppCompatActivity {
 
         Button backBut = findViewById(R.id.button2);
         Button selBut = findViewById(R.id.button3);
+        Button consulta = findViewById(R.id.button4);
 
         fecha = findViewById(R.id.texto);
 
@@ -97,7 +98,7 @@ public class Promedios extends AppCompatActivity {
                     allFecha = allFecha.replace("-", "");
                     if (esNumero(allFecha)) {
                         if (validaRangos(allFecha)) {
-                            Toast.makeText(getApplicationContext(), "Su consulta se ha ingresado", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "La fecha se ha ingresado correctamente", Toast.LENGTH_SHORT).show();
                             //El string allFecha ya está listo para ser ingresado a la URL de la API.
                             //Aquí van las acciones necesarias para consumir el servicio
                             fechas = allFecha;
@@ -105,9 +106,7 @@ public class Promedios extends AppCompatActivity {
                             ObtenerTemperaturaPromedio();
                             ObtenerHumedadPromedio();
                             ObtenerRadiacionPromedio();
-                            temperatura.speedTo(promedio(te),moveDuration);
-                            humedad.speedTo(promedio(hu),moveDuration);
-                            radiacion.speedTo(promedio(ra),moveDuration);
+
                         } else {
                             error2.show();
                         }
@@ -118,6 +117,20 @@ public class Promedios extends AppCompatActivity {
                     error1.show();
                 }
 
+
+            }
+        });
+
+        consulta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            if(te.isEmpty()){
+                Toast.makeText(getApplicationContext(), "No ha ingresado ninguna fecha", Toast.LENGTH_SHORT).show();
+            }else{
+                temperatura.speedTo(promedio(te),moveDuration);
+                humedad.speedTo(promedio(hu),moveDuration);
+                radiacion.speedTo(promedio(ra),moveDuration);
+            }
 
             }
         });
